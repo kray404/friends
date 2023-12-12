@@ -1,0 +1,52 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Season {
+  id         String   @default(cuid()) @id
+  name       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  friends    Friend[]
+  enemies    Enemy[]
+}
+
+model Friend {
+  id          String   @default(cuid()) @id
+  number      String
+  name        String
+  description String
+  imgUrl      String   @map(name: "img_url")
+  twitchLink  String   @map(name: "twitch_link") // URL to Twitch profile
+  otherNotes  String?  @map(name: "other_notes")
+  seasonId    String
+  season      Season   @relation(fields: [seasonId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map(name: "friends")
+}
+
+model Enemy {
+  id          String   @default(cuid()) @id
+  number      String
+  name        String
+  description String
+  imgUrl      String   @map(name: "img_url")
+  twitchLink  String   @map(name: "twitch_link") // URL to Twitch profile
+  otherNotes  String?  @map(name: "other_notes")
+  seasonId    String
+  season      Season   @relation(fields: [seasonId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map(name: "enemies")
+}
