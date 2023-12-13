@@ -1,20 +1,8 @@
 "use client";
 import { Friend, Season } from "@prisma/client";
 import React, { useState, useEffect } from "react";
-import { getSeasons } from "./seasons.loader";
-import { getFriends } from "./friends.loader";
-
-// async function getFriends(seasonId: string): Promise<Friend[]> {
-//   const friends = await prisma.friend.findMany({
-//     where: { seasonId: seasonId },
-//   });
-//   return friends;
-// }
-
-// async function getSeasons(): Promise<Season[]> {
-//   const seasons = await prisma.season.findMany({});
-//   return seasons;
-// }
+import { getSeasons } from "./loaders/seasons.loader";
+import { getFriends } from "./loaders/friends.loader";
 
 export default function Home() {
   const [seasons, setSeasons] = useState<Season[]>([]);
