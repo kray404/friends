@@ -1,69 +1,84 @@
 "use client";
-import { Friend, Season } from "@prisma/client";
-import React, { useState, useEffect } from "react";
-import { getSeasons } from "./loaders/seasons.loader";
-import { getFriends } from "./loaders/friends.loader";
+
+import React, { useEffect, useRef, useState } from "react";
+import FriendTable from "./components/FriendTable";
+import Friend from "./interfaces/Friend";
+import Season from "./interfaces/Season";
 
 export default function Home() {
-  const [seasons, setSeasons] = useState<Season[]>([]);
-  const [selectedSeason, setSelectedSeason] = useState<string>("");
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string>("");
+  const initialSeasonsLoad = useRef(true);
 
   useEffect(() => {
-    async function loadSeasons() {
-      const seasonsData = await getSeasons();
-      setSeasons(seasonsData);
-      if (seasonsData.length > 0) {
-        setSelectedSeason(seasonsData[0].id);
+    async function fetchSeasons() {
+      const response = await fetch("/api/seasons");
+
+      if (response.ok) {
+        const data: Season[] = await response.json();
+        setSeasons(data);
+        setSelectedSeasonId(data[0]?.id);
+        initialSeasonsLoad.current = false; // Mark that seasons have been loaded
+      } else {
+        console.error("Failed to fetch seasons");
       }
     }
 
-    loadSeasons();
+    fetchSeasons();
   }, []);
 
   useEffect(() => {
-    async function loadFriends() {
-      if (selectedSeason) {
-        const friendsData = await getFriends(selectedSeason);
-        setFriends(friendsData);
+    async function fetchFriends() {
+      if (selectedSeasonId && !initialSeasonsLoad.current) {
+        const response = await fetch(`/api/${selectedSeasonId}/friends`);
+
+        if (response.ok) {
+          const data: Friend[] = await response.json();
+          setFriends(sortFriends(data));
+        } else {
+          console.error("Failed to fetch friends");
+        }
       }
     }
 
-    loadFriends();
-  }, [selectedSeason]);
+    fetchFriends();
+  }, [selectedSeasonId]);
+
+  function handleSeasonChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedSeasonId(event.target.value);
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Feed</h1>
-
-      <select
-        value={selectedSeason}
-        onChange={(e) => setSelectedSeason(e.target.value)}
-      >
-        {seasons.map((season: Season) => (
-          <option key={season.id} value={season.id}>
-            {season.name}
-          </option>
-        ))}
-      </select>
-
+      <h1>Four Tees Friends</h1>
       <div>
-        {friends.map((friend: Friend) => (
-          <div key={friend.id}>
-            <h2>{friend.name}</h2>
-            <p>{friend.description}</p>
-            <img src={friend.imgUrl} alt={friend.name} />
-            <a
-              href={friend.twitchLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Twitch
-            </a>
-            <p>Other Notes: {friend.otherNotes}</p>
-          </div>
-        ))}
+        <label htmlFor="season-select">Choose a season:</label>
+        <select
+          id="season-select"
+          onChange={handleSeasonChange}
+          value={selectedSeasonId}
+        >
+          {seasons.map((season) => (
+            <option key={season.id} value={season.id}>
+              {season.name}
+            </option>
+          ))}
+        </select>
       </div>
+      <FriendTable friends={friends} />
     </main>
   );
+}
+
+function sortFriends(friends: Friend[]): Friend[] {
+  return friends.sort((a: Friend, b: Friend) => {
+    const numA = a.number ?? "";
+    const numB = b.number ?? "";
+
+    if (isNaN(Number(numA)) === isNaN(Number(numB))) {
+      return numA.localeCompare(numB, undefined, { numeric: true });
+    }
+    return isNaN(Number(numA)) ? 1 : -1;
+  });
 }
