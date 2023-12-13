@@ -12,5 +12,7 @@ export async function GET(request: Request, { params }: { params: MyParams }) {
     where: { seasonId: seasonId },
   });
 
+  // console.log(friends);
+
   return NextResponse.json(friends);
 }
