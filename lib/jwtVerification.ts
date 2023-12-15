@@ -1,23 +1,15 @@
 import jwt from "jsonwebtoken";
 
-type MiddlewareFunction = (input: Request | string) => Promise<boolean>;
+type MiddlewareFunction = (request: Request) => Promise<boolean>;
 
-export const verifyToken: MiddlewareFunction = async (input) => {
+export const verifyToken: MiddlewareFunction = async (request) => {
   try {
-    let token: string | null;
-
-    if (input instanceof Request) {
-      // Extract token from Request headers
-      token = input.headers.get("Authorization")?.split(" ")[1] ?? null;
-    } else {
-      // Directly use the input as the token if it's a string
-      token = input;
-    }
-
+    const token = request.headers.get("Authorization")?.split(" ")[1];
     if (!token) return false;
 
-    // Verify the JWT token
-    await jwt.verify(token, process.env.STREAMELEMENTS_JWT_TOKEN as string);
+    console.log("TOKEN 2: " + token);
+
+    await jwt.verify(token, process.env.STREAMELEMENTS_SECRET_TOKEN as string);
     return true;
   } catch (error) {
     console.error("Token verification failed:", error);
