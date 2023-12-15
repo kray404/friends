@@ -86,7 +86,11 @@ export default function FriendTable({
                 <TableCell>{friend.name}</TableCell>
                 <TableCell>
                   {extractValidUrl(friend.imgUrl) ? (
-                    <Link href={extractValidUrl(friend.imgUrl)}>
+                    <Link
+                      href={extractValidUrl(friend.imgUrl)}
+                      className="hover:underline"
+                      target="_blank"
+                    >
                       {friend.imgUrl}
                     </Link>
                   ) : (
@@ -95,7 +99,11 @@ export default function FriendTable({
                 </TableCell>
                 <TableCell>
                   {extractValidUrl(friend.twitchLink) ? (
-                    <Link href={extractValidUrl(friend.twitchLink)}>
+                    <Link
+                      href={extractValidUrl(friend.twitchLink)}
+                      className="hover:underline"
+                      target="_blank"
+                    >
                       {friend.twitchLink}
                     </Link>
                   ) : (
