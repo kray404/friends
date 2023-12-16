@@ -41,7 +41,7 @@ model Enemy {
   name        String
   description String
   imgUrl      String   @map(name: "img_url")
-  twitchLink  String   @map(name: "twitch_link") // URL to Twitch profile
+  twitchLink  String   @map(name: "twitch_link")
   otherNotes  String?  @map(name: "other_notes")
   seasonId    String
   season      Season   @relation(fields: [seasonId], references: [id])
@@ -49,4 +49,14 @@ model Enemy {
   updatedAt   DateTime @updatedAt
 
   @@map(name: "enemies")
+}
+
+model AcceptedUser {
+  id          String  @default(cuid()) @id
+  twitchId    String  @map(name: "twitch_id")
+  username    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map(name: "Users")
 }
