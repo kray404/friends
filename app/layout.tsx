@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
-import Nav from "@/components/Nav";
+import Nav from "@/components/NavBar/Nav";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {

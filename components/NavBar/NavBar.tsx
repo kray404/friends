@@ -1,3 +1,5 @@
+// Navbar modified from: https://github.com/vercel/nextjs-postgres-nextauth-tailwindcss-template/blob/main/app/navbar.tsx
+
 "use client";
 
 import { Fragment } from "react";

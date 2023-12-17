@@ -12,7 +12,6 @@ import {
 
 interface FriendTableProps {
   friends: Friend[];
-  // isLoading: boolean;
 }
 
 export default function FriendTable({ friends }: FriendTableProps) {
@@ -22,49 +21,57 @@ export default function FriendTable({ friends }: FriendTableProps) {
         <TableRow>
           <TableHead>Number</TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Picture Link</TableHead>
-          <TableHead>Stream Link</TableHead>
+          <TableHead className="xl:table-cell hidden">Picture Link</TableHead>
+          <TableHead className="xl:table-cell hidden">Stream Link</TableHead>
           <TableHead>Note</TableHead>
-          <TableHead>Updated</TableHead>
+          <TableHead className="xl:table-cell hidden">Updated</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {friends.map((friend) => (
-          <TableRow key={friend.id}>
-            <TableCell className="font-medium">{friend.number}</TableCell>
-            <TableCell>{friend.name}</TableCell>
-            <TableCell>
-              {extractValidUrl(friend.imgUrl) ? (
-                <Link
-                  href={extractValidUrl(friend.imgUrl)}
-                  className="hover:underline"
-                  target="_blank"
-                >
-                  {friend.imgUrl}
-                </Link>
-              ) : (
-                friend.imgUrl
-              )}
-            </TableCell>
-            <TableCell>
-              {extractValidUrl(friend.twitchLink) ? (
-                <Link
-                  href={extractValidUrl(friend.twitchLink)}
-                  className="hover:underline"
-                  target="_blank"
-                >
-                  {friend.twitchLink}
-                </Link>
-              ) : (
-                friend.twitchLink
-              )}
-            </TableCell>
-            <TableCell>{friend.notes}</TableCell>
-            <TableCell>
-              {new Date(friend.updatedAt).toLocaleDateString()}
+        {friends.length > 0 ? (
+          friends.map((friend) => (
+            <TableRow key={friend.id}>
+              <TableCell className="font-medium">{friend.number}</TableCell>
+              <TableCell>{friend.name}</TableCell>
+              <TableCell className="xl:table-cell hidden">
+                {extractValidUrl(friend.imgUrl) ? (
+                  <Link
+                    href={extractValidUrl(friend.imgUrl)}
+                    className="hover:underline"
+                    target="_blank"
+                  >
+                    {friend.imgUrl}
+                  </Link>
+                ) : (
+                  friend.imgUrl
+                )}
+              </TableCell>
+              <TableCell className="xl:table-cell hidden">
+                {extractValidUrl(friend.twitchLink) ? (
+                  <Link
+                    href={extractValidUrl(friend.twitchLink)}
+                    className="hover:underline"
+                    target="_blank"
+                  >
+                    {friend.twitchLink}
+                  </Link>
+                ) : (
+                  friend.twitchLink
+                )}
+              </TableCell>
+              <TableCell>{friend.notes}</TableCell>
+              <TableCell className="xl:table-cell hidden">
+                {new Date(friend.updatedAt).toLocaleDateString()}
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center">
+              Nobody here :(
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
