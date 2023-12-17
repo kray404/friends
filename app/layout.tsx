@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "An overview over Four Tees friends in the different seasons",
 };
 
-export const roboto_mono = Roboto_Mono({
+const roboto_mono = Roboto_Mono({
   subsets: ["latin"],
   display: "swap",
 });
