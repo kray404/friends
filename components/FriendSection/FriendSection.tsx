@@ -1,7 +1,7 @@
 "use client";
 
 import Friend from "@/app/interfaces/Friend";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { sortFriends } from "@/lib/sortFriends";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import SkeletonFriendTable from "./SkeletonFriendTable";

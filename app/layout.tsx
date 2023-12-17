@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
-import Nav from "@/components/NavBar/Nav";
+import NavBar from "@/components/NavBar";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className={roboto_mono.className}>
       <body className="h-full">
         <Suspense>
-          <Nav />
+          <NavBar />
         </Suspense>
         {children}
       </body>
