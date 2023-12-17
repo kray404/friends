@@ -1,4 +1,4 @@
-import Friend from "../interfaces/Friend";
+import Friend from "../app/interfaces/Friend";
 
 export function sortFriends(friends: Friend[]): Friend[] {
   return friends.sort((a: Friend, b: Friend) => {

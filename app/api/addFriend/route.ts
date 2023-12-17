@@ -4,24 +4,15 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const res = await request.json();
-    const {
-      number,
-      name,
-      description,
-      imgUrl,
-      twitchLink,
-      otherNotes,
-      seasonId,
-    } = res;
+    const { number, name, imgUrl, twitchLink, notes, seasonId } = res;
 
     const result = await prisma.friend.create({
       data: {
         number,
         name,
-        description,
         imgUrl,
         twitchLink,
-        otherNotes,
+        notes,
         seasonId,
       },
     });

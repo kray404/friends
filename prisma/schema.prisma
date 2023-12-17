@@ -23,10 +23,9 @@ model Friend {
   id          String   @default(cuid()) @id
   number      String
   name        String
-  description String
   imgUrl      String   @map(name: "img_url")
   twitchLink  String   @map(name: "twitch_link") // URL to Twitch profile
-  otherNotes  String?  @map(name: "other_notes")
+  notes       String?
   seasonId    String
   season      Season   @relation(fields: [seasonId], references: [id])
   createdAt   DateTime @default(now())

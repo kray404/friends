@@ -19,7 +19,7 @@ function formatSeasonId(seasonId: string): string {
 export async function GET(request: Request, { params }: { params: MyParams }) {
   const { friendNumber, seasonId } = params;
 
-  // Retrieve the friend from the database using Prisma
+  // Retrieve the friend from the database
   const friend = await prisma.friend.findFirst({
     where: {
       number: friendNumber,
@@ -35,13 +35,11 @@ export async function GET(request: Request, { params }: { params: MyParams }) {
     // Format the response with the friend's details
     const responseMessage = `Friend Number ${friend.number} for ${formattedSeasonId} is ${friend.name}. Go follow them! ${friend.twitchLink}`;
 
-    // Return the formatted message
     return new NextResponse(responseMessage, {
       status: 200,
       statusText: "OK",
     });
   } else {
-    // Return an appropriate response if the friend does not exist
     return new NextResponse("Friend not found", {
       status: 404,
       statusText: "Not Found",
