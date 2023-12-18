@@ -10,7 +10,7 @@ export default async function Home() {
   console.log(initialPeople);
 
   return (
-    <main className="flex min-h-screen flex-col p-24">
+    <main className="flex min-h-screen flex-col p-12">
       <FriendSection
         seasonId="nopixel_season_2"
         initialPeople={initialPeople}
