@@ -14,7 +14,7 @@ const roboto_mono = Roboto_Mono({
   display: "swap",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;

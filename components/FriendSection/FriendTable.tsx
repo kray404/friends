@@ -29,15 +29,18 @@ export default function FriendTable({ friends }: FriendTableProps) {
       </TableHeader>
       <TableBody>
         {friends.length > 0 ? (
-          friends.map((friend) => (
-            <TableRow key={friend.id}>
+          friends.map((friend, index) => (
+            <TableRow
+              key={friend.id}
+              className={index % 2 === 0 ? "bg-background" : "bg-secondary"}
+            >
               <TableCell className="font-medium">{friend.number}</TableCell>
               <TableCell>{friend.name}</TableCell>
               <TableCell className="xl:table-cell hidden">
                 {extractValidUrl(friend.imgUrl) ? (
                   <Link
                     href={extractValidUrl(friend.imgUrl)}
-                    className="hover:underline"
+                    className="hover:underline hover:text-blue-600"
                     target="_blank"
                   >
                     {friend.imgUrl}
@@ -50,7 +53,7 @@ export default function FriendTable({ friends }: FriendTableProps) {
                 {extractValidUrl(friend.twitchLink) ? (
                   <Link
                     href={extractValidUrl(friend.twitchLink)}
-                    className="hover:underline"
+                    className="hover:underline hover:text-blue-600"
                     target="_blank"
                   >
                     {friend.twitchLink}
@@ -68,7 +71,7 @@ export default function FriendTable({ friends }: FriendTableProps) {
         ) : (
           <TableRow>
             <TableCell colSpan={6} className="text-center">
-              Nobody here :(
+              <p>Nobody here :(</p>
             </TableCell>
           </TableRow>
         )}

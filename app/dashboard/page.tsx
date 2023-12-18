@@ -1,10 +1,15 @@
-import DashboardSection from "@/components/DashboardSection/DashboardSection";
-import { Card } from "@/components/ui/card";
+import Dashboard from "@/components/DashboardSection/Dashboard";
+import SessionProvider from "@/components/SessionProvider";
+import { getServerSession } from "next-auth";
 
-export default function FriendSection() {
+export default async function DashboardPage() {
+  const session = await getServerSession();
+
+  const username = session?.user?.name ?? "";
+
   return (
-    <section className="flex min-h-screen flex-col p-12">
-      <DashboardSection />
-    </section>
+    <SessionProvider session={session}>
+      <Dashboard username={username} />
+    </SessionProvider>
   );
 }

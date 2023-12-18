@@ -10,10 +10,12 @@ import AcceptedUser from "@/app/interfaces/AcceptedUser";
 
 interface DashboardUsersTableProps {
   users: AcceptedUser[];
+  username: string;
 }
 
 export default function DashboardUsersTable({
   users,
+  username,
 }: DashboardUsersTableProps) {
   return (
     <Table className="mt-5">
@@ -23,13 +25,17 @@ export default function DashboardUsersTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.length > 0 ? (
-          users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.username}</TableCell>
-            </TableRow>
-          ))
-        ) : (
+        {users.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>
+              {user.username}
+              {user.username === username && (
+                <span className="ml-2">&lt;-- This is you</span>
+              )}
+            </TableCell>
+          </TableRow>
+        ))}
+        {users.length === 0 && (
           <TableRow>
             <TableCell colSpan={6} className="text-center">
               Nobody here :(

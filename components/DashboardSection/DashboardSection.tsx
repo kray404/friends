@@ -26,9 +26,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { signOut } from "next-auth/react";
 
-export default function DashboardSection() {
-  const [users, setUsers] = useState<AcceptedUser[]>([]);
+interface DashboardSectionProps {
+  username: string;
+  acceptedUsers: AcceptedUser[]; // Add this prop
+}
+
+export default function DashboardSection({
+  username,
+  acceptedUsers,
+}: DashboardSectionProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [friendData, setFriendData] = useState({
     number: "",
@@ -92,31 +100,9 @@ export default function DashboardSection() {
     }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/getAcceptedUsers");
-      if (response.ok) {
-        const data: AcceptedUser[] = await response.json();
-        console.log("Data: " + data);
-        setUsers(data);
-        console.log(users);
-      } else {
-        throw new Error(`Failed to fetch users`);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <section>
+      <Button onClick={() => signOut()}>Sign Out</Button>
       <Card>
         <CardHeader className="prose w-full">
           <h3>Website MODS</h3>
@@ -228,11 +214,7 @@ export default function DashboardSection() {
               </form>
             </DialogContent>
           </Dialog>
-          {isLoading ? (
-            <SkeletonUsersTable />
-          ) : (
-            <DashboardUsersTable users={users} />
-          )}
+          <DashboardUsersTable users={acceptedUsers} username={username} />
         </CardContent>
       </Card>
     </section>
