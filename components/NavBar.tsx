@@ -36,7 +36,7 @@ export default function Navbar() {
                       className={classNames(
                         pathname === item.href
                           ? "border-accent text-accent"
-                          : "border-transparent text-muted hover:text-muted-foreground hover:border-muted-foreground",
+                          : "border-transparent text-muted hover:text-background hover:border-background",
                         "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                       )}
                       aria-current={pathname === item.href ? "page" : undefined}
