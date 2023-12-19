@@ -15,13 +15,12 @@ export default function FriendSection({
   seasonId: string;
   initialPeople?: Friend[];
 }) {
-  const [people, setPeople] = useState<Friend[]>(initialPeople || []);
+  const [people, setPeople] = useState<Friend[]>([]);
   const [viewingFriends, setViewingFriends] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
-    // Condition to decide whether to fetch data or not
     const shouldFetchData =
       !initialPeople || (initialPeople && !viewingFriends);
 
@@ -34,6 +33,10 @@ export default function FriendSection({
       fetchPeople(seasonId, viewingFriends ? "friends" : "enemies");
     } else {
       setIsLoading(false);
+    }
+
+    if (initialPeople && viewingFriends) {
+      setPeople(initialPeople);
     }
   }, [seasonId, viewingFriends]);
 
