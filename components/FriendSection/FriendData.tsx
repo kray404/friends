@@ -1,4 +1,4 @@
-"use server"; // Indicate this is a server component
+"use server";
 
 import { revalidateTag } from "next/cache";
 

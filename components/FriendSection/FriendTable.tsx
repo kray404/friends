@@ -64,7 +64,7 @@ export default function FriendTable({ friends }: FriendTableProps) {
               </TableCell>
               <TableCell>{friend.notes}</TableCell>
               <TableCell className="xl:table-cell hidden">
-                {new Date(friend.updatedAt).toLocaleDateString()}
+                {new Date(friend.updatedAt).toLocaleDateString("en-US")}
               </TableCell>
             </TableRow>
           ))
