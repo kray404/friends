@@ -19,7 +19,9 @@ export async function POST(request: Request) {
     });
 
     // Neccessary because of ISR
-    await revalidateFriendData();
+    setTimeout(async () => {
+      await revalidateFriendData();
+    }, 500);
 
     return NextResponse.json({ result });
   } catch (error) {
