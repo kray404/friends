@@ -16,7 +16,7 @@ interface FriendTableProps {
 
 export default function FriendTable({ friends }: FriendTableProps) {
   return (
-    <Table className="mt-5">
+    <Table className="mt-5 border">
       <TableHeader>
         <TableRow>
           <TableHead>Number</TableHead>

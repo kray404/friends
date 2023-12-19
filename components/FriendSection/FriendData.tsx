@@ -1,6 +1,5 @@
 "use server"; // Indicate this is a server component
 
-import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
 
 interface FriendDataProps {

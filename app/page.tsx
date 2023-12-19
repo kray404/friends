@@ -7,8 +7,6 @@ export default async function Home() {
     type: "friends",
   });
 
-  console.log(initialPeople);
-
   return (
     <main className="flex min-h-screen flex-col p-12">
       <FriendSection

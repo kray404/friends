@@ -10,10 +10,10 @@ import { Input } from "../ui/input";
 
 export default function FriendSection({
   seasonId,
-  initialPeople, // Add this prop
+  initialPeople,
 }: {
   seasonId: string;
-  initialPeople?: Friend[]; // This prop contains pre-fetched data
+  initialPeople?: Friend[];
 }) {
   const [people, setPeople] = useState<Friend[]>(initialPeople || []);
   const [viewingFriends, setViewingFriends] = useState(true);
@@ -21,7 +21,20 @@ export default function FriendSection({
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
-    fetchPeople(seasonId, viewingFriends ? "friends" : "enemies");
+    // Condition to decide whether to fetch data or not
+    const shouldFetchData =
+      !initialPeople || (initialPeople && !viewingFriends);
+
+    if (shouldFetchData) {
+      console.log(
+        `Client fetching data for ${seasonId}, ${
+          viewingFriends ? "friends" : "enemies"
+        }`
+      );
+      fetchPeople(seasonId, viewingFriends ? "friends" : "enemies");
+    } else {
+      setIsLoading(false);
+    }
   }, [seasonId, viewingFriends]);
 
   const fetchPeople = async (seasonId: string, type: "friends" | "enemies") => {

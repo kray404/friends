@@ -1,3 +1,4 @@
+import { revalidateFriendData } from "@/components/FriendSection/FriendData";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -16,6 +17,9 @@ export async function POST(request: Request) {
         seasonId,
       },
     });
+
+    // Neccessary because of ISR
+    await revalidateFriendData();
 
     return NextResponse.json({ result });
   } catch (error) {
