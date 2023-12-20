@@ -1,4 +1,4 @@
-import { revalidateFriendData } from "@/components/FriendSection/FriendData";
+import { revalidateFriendData } from "@/lib/friendData";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -18,10 +18,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Neccessary because of ISR
-    setTimeout(async () => {
-      await revalidateFriendData();
-    }, 500);
+    await revalidateFriendData();
 
     return NextResponse.json({ result });
   } catch (error) {

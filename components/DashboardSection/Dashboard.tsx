@@ -4,6 +4,8 @@ import DashboardSection from "@/components/DashboardSection/DashboardSection";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AcceptedUser from "@/app/interfaces/AcceptedUser";
+import { revalidateFriendData } from "@/lib/friendData";
+import { Button } from "../ui/button";
 
 interface DashboardProps {
   username: string;
@@ -36,6 +38,15 @@ export default function Dashboard({ username }: DashboardProps) {
     }
   }, [username, router]);
 
+  const handleRevalidate = async () => {
+    try {
+      await revalidateFriendData();
+      // Optionally, you can add logic to handle the success of revalidation
+    } catch (error) {
+      console.error("Error during revalidation:", error);
+    }
+  };
+
   if (!username || !acceptedUsers.length) {
     return <div>Loading...</div>; // Or some loading indicator
   }
@@ -46,6 +57,7 @@ export default function Dashboard({ username }: DashboardProps) {
         username={username || ""}
         acceptedUsers={acceptedUsers}
       />
+      <Button onClick={handleRevalidate}>Revalidate Friend Data</Button>
     </section>
   );
 }

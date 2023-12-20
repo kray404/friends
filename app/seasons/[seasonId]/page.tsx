@@ -1,4 +1,4 @@
-import { FriendData } from "@/components/FriendSection/FriendData";
+import { friendData } from "@/lib/friendData";
 import FriendSection from "@/components/FriendSection/FriendSection";
 
 interface MyParams {
@@ -8,12 +8,12 @@ interface MyParams {
 export default async function SeasonPage({ params }: { params: MyParams }) {
   const seasonId = params.seasonId;
 
-  let friends = await FriendData({
+  let friends = await friendData({
     seasonId: seasonId,
     type: "friends",
   });
 
-  let enemies = await FriendData({
+  let enemies = await friendData({
     seasonId: seasonId,
     type: "enemies",
   });

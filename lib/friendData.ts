@@ -7,7 +7,7 @@ interface FriendDataProps {
   type: "friends" | "enemies";
 }
 
-export async function FriendData({ seasonId, type }: FriendDataProps) {
+export async function friendData({ seasonId, type }: FriendDataProps) {
   const data = await fetch(
     `https://fourteefriends.vercel.app/api/${seasonId}/${type}`,
     {
