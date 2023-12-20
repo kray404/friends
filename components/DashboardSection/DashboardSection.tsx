@@ -21,6 +21,7 @@ import {
   fetchSeasons,
   revalidateAllData,
 } from "@/lib/dataFetchers";
+import DashboardFriendTab from "./DashboardFriendTab";
 
 interface DashboardProps {
   session: Session | null;
@@ -89,13 +90,12 @@ export default function DashboardSection({ session }: DashboardProps) {
   }
 
   return (
-    <section className="flex min-h-screen flex-col p-12">
+    <section className="flex min-h-screen flex-col p-12 min-w-min">
       <Button onClick={() => signOut()}>Sign Out</Button>
       <Card>
         <CardHeader className="prose w-full">
-          <h3>Website MODS</h3>
           <CardDescription>
-            Twitch Users that can add / modify Four Tee's friends & enemies
+            <h1>Secret Admin Page</h1>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -110,6 +110,7 @@ export default function DashboardSection({ session }: DashboardProps) {
               </TabsList>
               <TabsContent value="friends">
                 <DashboardAddFriendDialog seasons={seasons} />
+                <DashboardFriendTab seasons={seasons} friends={friends} />
               </TabsContent>
               <TabsContent value="enemies">
                 <p>Enemies</p>
