@@ -1,107 +1,95 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AcceptedUser from "@/app/interfaces/AcceptedUser";
+import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import DashboardUsersTable from "./DashboardUsersTable";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import SkeletonUsersTable from "./SkeletonUsersTable";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { signIn, signOut } from "next-auth/react";
+import DashboardAddFriendDialog from "./DashboardAddFriendDialog";
+import { Session } from "next-auth";
+import { isAuthenticated } from "@/lib/isAuthenticated";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
+import FriendSection from "../FriendSection/FriendSection";
 import Season from "@/app/interfaces/Season";
+import Friend from "@/app/interfaces/Friend";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { signOut } from "next-auth/react";
+  fetchAllEnemies,
+  fetchAllFriends,
+  fetchSeasons,
+  revalidateAllData,
+} from "@/lib/dataFetchers";
 
-interface DashboardSectionProps {
-  username: string;
-  acceptedUsers: AcceptedUser[]; // Add this prop
+interface DashboardProps {
+  session: Session | null;
 }
 
-export default function DashboardSection({
-  username,
-  acceptedUsers,
-}: DashboardSectionProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [friendData, setFriendData] = useState({
-    number: "",
-    name: "",
-    imgUrl: "",
-    twitchLink: "",
-    notes: "",
-    seasonId: "",
-  });
+export default function DashboardSection({ session }: DashboardProps) {
+  const [acceptedUsers, setAcceptedUsers] = useState<AcceptedUser[]>([]);
   const [seasons, setSeasons] = useState<Season[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [enemies, setEnemies] = useState<Friend[]>([]);
+
+  const username = session?.user?.name ?? "";
+  const router = useRouter();
 
   useEffect(() => {
-    fetchSeasons();
+    async function fetchAcceptedUsers() {
+      try {
+        if (await isAuthenticated(session)) {
+          const response = await fetch("/api/getAcceptedUsers");
+          if (response.ok) {
+            const users: AcceptedUser[] = await response.json();
+            setAcceptedUsers(users);
+          } else {
+            throw new Error("Failed to fetch accepted users");
+          }
+        } else {
+          router.push("/unauthorized");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function fetchData() {
+      try {
+        const seasonsData = await fetchSeasons();
+        const friendsData = await fetchAllFriends();
+        const enemiesData = await fetchAllEnemies();
+
+        setSeasons(seasonsData);
+        setFriends(friendsData);
+        setEnemies(enemiesData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    if (username) {
+      fetchAcceptedUsers();
+    }
+
+    fetchData();
   }, []);
 
-  const fetchSeasons = async () => {
+  const handleRevalidate = async () => {
     try {
-      const response = await fetch("/api/seasons");
-      if (response.ok) {
-        const data: Season[] = await response.json();
-        setSeasons(data);
-      } else {
-        console.error("Failed to fetch seasons");
-      }
+      await revalidateAllData();
+      // Optionally, you can add logic to handle the success of revalidation
     } catch (error) {
-      console.error("Error fetching seasons:", error);
+      console.error("Error during revalidation:", error);
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFriendData({ ...friendData, [e.target.name]: e.target.value });
-  };
-
-  const handleSeasonIdChange = (selectedValue: string) => {
-    setFriendData({ ...friendData, seasonId: selectedValue });
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const bodyJSON = JSON.stringify(friendData);
-      console.log(bodyJSON);
-
-      const response = await fetch("/api/addFriend/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: bodyJSON,
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        console.log("Friend added:", result);
-        // Reset the form or close the dialog
-      } else {
-        console.error("Failed to add friend");
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
+  if (!username) {
+    return <Button onClick={() => signIn()}>Sign in</Button>;
+  }
 
   return (
-    <section>
+    <section className="flex min-h-screen flex-col p-12">
       <Button onClick={() => signOut()}>Sign Out</Button>
       <Card>
         <CardHeader className="prose w-full">
@@ -111,112 +99,32 @@ export default function DashboardSection({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Add Friend</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <form onSubmit={handleSubmit}>
-                <DialogHeader>
-                  <DialogTitle>Add New Friend</DialogTitle>
-                  <DialogDescription>
-                    Enter the details of the friend to add them to the database.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  {/* Input fields for friend attributes */}
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="number" className="text-right">
-                      Number
-                    </Label>
-                    <Input
-                      id="number"
-                      name="number"
-                      value={friendData.number}
-                      onChange={handleChange}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={friendData.name}
-                      onChange={handleChange}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="imgUrl" className="text-right">
-                      Image URL
-                    </Label>
-                    <Input
-                      id="imgUrl"
-                      name="imgUrl"
-                      value={friendData.imgUrl}
-                      onChange={handleChange}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="twitchLink" className="text-right">
-                      Twitch Link
-                    </Label>
-                    <Input
-                      id="twitchLink"
-                      name="twitchLink"
-                      value={friendData.twitchLink}
-                      onChange={handleChange}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="notes" className="text-right">
-                      Notes
-                    </Label>
-                    <Input
-                      id="notes"
-                      name="notes"
-                      value={friendData.notes}
-                      onChange={handleChange}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="seasonId" className="text-right">
-                      Season
-                    </Label>
-                    <Select
-                      name="seasonId"
-                      onValueChange={(e) => handleSeasonIdChange(e)}
-                    >
-                      <SelectTrigger className="w-max">
-                        <SelectValue placeholder="Select a Season" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {seasons.map((season) => (
-                            <SelectItem key={season.id} value={season.id}>
-                              {season.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Add Friend</Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-          <DashboardUsersTable users={acceptedUsers} username={username} />
+          {acceptedUsers.length === 0 ? (
+            <p>Loading...</p>
+          ) : (
+            <Tabs defaultValue="friends">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="friends">Friends</TabsTrigger>
+                <TabsTrigger value="enemies">Enemies</TabsTrigger>
+                <TabsTrigger value="moderators">Site Admins</TabsTrigger>
+              </TabsList>
+              <TabsContent value="friends">
+                <DashboardAddFriendDialog seasons={seasons} />
+              </TabsContent>
+              <TabsContent value="enemies">
+                <p>Enemies</p>
+              </TabsContent>
+              <TabsContent value="moderators">
+                <DashboardUsersTable
+                  users={acceptedUsers}
+                  username={username}
+                />
+              </TabsContent>
+            </Tabs>
+          )}
         </CardContent>
       </Card>
+      <Button onClick={handleRevalidate}>Revalidate Friend Data</Button>
     </section>
   );
 }

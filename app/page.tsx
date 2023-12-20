@@ -1,13 +1,13 @@
-import { friendData } from "@/lib/friendData";
+import { fetchPeopleBySeason } from "@/lib/dataFetchers";
 import FriendSection from "@/components/FriendSection/FriendSection";
 
 export default async function Home() {
-  let friends = await friendData({
+  let friends = await fetchPeopleBySeason({
     seasonId: "nopixel_season_2",
     type: "friends",
   });
 
-  let enemies = await friendData({
+  let enemies = await fetchPeopleBySeason({
     seasonId: "nopixel_season_2",
     type: "enemies",
   });
