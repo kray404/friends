@@ -1,4 +1,4 @@
-import { revalidateFriendData } from "@/lib/dataFetchers";
+import { revalidateFriends } from "@/lib/dataFetchers";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       },
     });
 
-    await revalidateFriendData();
+    await revalidateFriends();
 
     return NextResponse.json({ result });
   } catch (error) {
@@ -35,7 +35,7 @@ export async function DELETE(request: Request) {
       where: { id },
     });
 
-    await revalidateFriendData();
+    await revalidateFriends();
 
     return NextResponse.json({ deletedFriend });
   } catch (error) {
@@ -61,7 +61,7 @@ export async function PATCH(request: Request) {
       },
     });
 
-    await revalidateFriendData();
+    await revalidateFriends();
 
     return NextResponse.json({ updatedFriend });
   } catch (error) {
