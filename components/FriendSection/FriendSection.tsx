@@ -26,8 +26,6 @@ export default function FriendSection({
 
   const displayedPeople = viewingFriends ? friends ?? [] : enemies ?? [];
 
-  console.log(displayedPeople);
-
   const toggleView = () => {
     setViewingFriends(!viewingFriends);
   };
@@ -77,8 +75,7 @@ export default function FriendSection({
           {isLoading ? (
             <SkeletonFriendTable />
           ) : (
-            <SkeletonFriendTable />
-            // <FriendTable friends={filterUsers(sortFriends(displayedPeople))} />
+            <FriendTable friends={filterUsers(sortFriends(displayedPeople))} />
           )}
         </CardContent>
       </Card>
