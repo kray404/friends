@@ -91,14 +91,17 @@ export async function fetchAllEnemies(): Promise<any[]> {
 // Functions to trigger revalidation for each data type
 export async function revalidateSeasons() {
   await revalidateTag(cacheKeys.seasons);
+  console.log(`revalidated ${cacheKeys.seasons}`);
 }
 
 export async function revalidateFriends() {
   await revalidateTag(cacheKeys.friends);
+  console.log(`revalidated ${cacheKeys.friends}`);
 }
 
 export async function revalidateEnemies() {
   await revalidateTag(cacheKeys.enemies);
+  console.log(`revalidated ${cacheKeys.enemies}`);
 }
 
 export async function revalidateAllData() {
@@ -106,5 +109,6 @@ export async function revalidateAllData() {
 
   for (const key of allCacheKeys) {
     await revalidateTag(key);
+    console.log(`revalidated ${key}`);
   }
 }
