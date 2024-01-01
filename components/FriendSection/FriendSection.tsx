@@ -9,8 +9,8 @@ import { Input } from "../ui/input";
 
 interface FriendSectionProps {
   seasonId: string;
-  friends: Friend[];
-  enemies: Friend[];
+  friends: Friend[] | undefined;
+  enemies: Friend[] | undefined;
 }
 
 export default function FriendSection({
@@ -21,7 +21,7 @@ export default function FriendSection({
   const [viewingFriends, setViewingFriends] = useState(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const displayedPeople = viewingFriends ? friends : enemies;
+  const displayedPeople = viewingFriends ? friends ?? [] : enemies ?? [];
 
   const toggleView = () => {
     setViewingFriends(!viewingFriends);

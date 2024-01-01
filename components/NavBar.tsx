@@ -10,6 +10,7 @@ const navigation = [
   { name: "Nopixel Season 1", href: "/seasons/nopixel_season_1" },
   { name: "Nopixel Season 2", href: "/seasons/nopixel_season_2" },
   { name: "Nopixel Season 3", href: "/seasons/nopixel_season_3" },
+  { name: "Dashboard", href: "/dashboard" },
 ];
 
 function classNames(...classes: string[]) {

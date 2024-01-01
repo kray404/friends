@@ -25,7 +25,7 @@ export async function fetchPeopleBySeason({
 }: FriendDataProps): Promise<any[]> {
   const cacheKey = type === "friends" ? cacheKeys.friends : cacheKeys.enemies;
 
-  const data = await fetch(
+  const response = await fetch(
     `https://fourteefriends.vercel.app/api/${seasonId}/${type}`,
     {
       cache: "force-cache",
@@ -33,11 +33,11 @@ export async function fetchPeopleBySeason({
     }
   );
 
-  if (!data.ok) {
+  if (!response.ok) {
     throw new Error(`Failed to fetch ${type}`);
   }
 
-  return data.json();
+  return response.json();
 }
 
 export async function fetchSeasons(): Promise<any[]> {

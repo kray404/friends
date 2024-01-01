@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AcceptedUser from "@/app/interfaces/AcceptedUser";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import DashboardUsersTable from "./DashboardUsersTable";
 import { signIn, signOut } from "next-auth/react";
-import DashboardAddFriendDialog from "./DashboardAddFriendDialog";
 import { Session } from "next-auth";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
-import FriendSection from "../FriendSection/FriendSection";
 import Season from "@/app/interfaces/Season";
 import Friend from "@/app/interfaces/Friend";
 import {
@@ -22,6 +20,8 @@ import {
   revalidateAllData,
 } from "@/lib/dataFetchers";
 import DashboardFriendTab from "./DashboardFriendTab";
+import FriendDialog from "../FriendDialog";
+import { handleSubmitFriendData } from "@/lib/submitFriendData";
 
 interface DashboardProps {
   session: Session | null;
@@ -55,19 +55,7 @@ export default function DashboardSection({ session }: DashboardProps) {
       }
     }
 
-    async function fetchData() {
-      try {
-        const seasonsData = await fetchSeasons();
-        const friendsData = await fetchAllFriends();
-        const enemiesData = await fetchAllEnemies();
-
-        setSeasons(seasonsData);
-        setFriends(friendsData);
-        setEnemies(enemiesData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
+    fetchData();
 
     if (username) {
       fetchAcceptedUsers();
@@ -76,10 +64,25 @@ export default function DashboardSection({ session }: DashboardProps) {
     fetchData();
   }, []);
 
+  async function fetchData() {
+    try {
+      const seasonsData = await fetchSeasons();
+      const friendsData = await fetchAllFriends();
+      const enemiesData = await fetchAllEnemies();
+
+      setSeasons(seasonsData);
+      setFriends(friendsData);
+      setEnemies(enemiesData);
+
+      console.log(friendsData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
   const handleRevalidate = async () => {
     try {
       await revalidateAllData();
-      // Optionally, you can add logic to handle the success of revalidation
     } catch (error) {
       console.error("Error during revalidation:", error);
     }
@@ -94,9 +97,7 @@ export default function DashboardSection({ session }: DashboardProps) {
       <Button onClick={() => signOut()}>Sign Out</Button>
       <Card>
         <CardHeader className="prose w-full">
-          <CardDescription>
-            <h1>Secret Admin Page</h1>
-          </CardDescription>
+          <h1>Secret Admin Page</h1>
         </CardHeader>
         <CardContent>
           {acceptedUsers.length === 0 ? (
@@ -109,7 +110,11 @@ export default function DashboardSection({ session }: DashboardProps) {
                 <TabsTrigger value="moderators">Site Admins</TabsTrigger>
               </TabsList>
               <TabsContent value="friends">
-                <DashboardAddFriendDialog seasons={seasons} />
+                <FriendDialog
+                  seasons={seasons}
+                  operation="Add"
+                  onSubmit={handleSubmitFriendData}
+                />
                 <DashboardFriendTab seasons={seasons} friends={friends} />
               </TabsContent>
               <TabsContent value="enemies">
