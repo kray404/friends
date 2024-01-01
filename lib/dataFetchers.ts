@@ -1,5 +1,7 @@
 "use server";
 
+import Friend from "@/app/interfaces/Friend";
+import Season from "@/app/interfaces/Season";
 import { revalidateTag } from "next/cache";
 
 interface CacheKeys {
@@ -22,11 +24,11 @@ const cacheKeys: CacheKeys = {
 export async function fetchPeopleBySeason({
   seasonId,
   type,
-}: FriendDataProps): Promise<any[]> {
+}: FriendDataProps): Promise<Friend[]> {
   const cacheKey = type === "friends" ? cacheKeys.friends : cacheKeys.enemies;
 
   const response = await fetch(
-    `https://fourteefriends.vercel.app/api/${seasonId}/${type}`,
+    `${process.env.NEXTAUTH_URL}/api/${seasonId}/${type}`,
     {
       cache: "force-cache",
       next: { tags: [cacheKey] },
@@ -40,14 +42,11 @@ export async function fetchPeopleBySeason({
   return response.json();
 }
 
-export async function fetchSeasons(): Promise<any[]> {
-  const response = await fetch(
-    "https://fourteefriends.vercel.app/api/seasons",
-    {
-      cache: "force-cache",
-      next: { tags: [cacheKeys.seasons] },
-    }
-  );
+export async function fetchSeasons(): Promise<Season[]> {
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/seasons`, {
+    cache: "force-cache",
+    next: { tags: [cacheKeys.seasons] },
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch seasons");
@@ -56,9 +55,9 @@ export async function fetchSeasons(): Promise<any[]> {
   return response.json();
 }
 
-export async function fetchAllFriends(): Promise<any[]> {
+export async function fetchAllFriends(): Promise<Friend[]> {
   const response = await fetch(
-    "https://fourteefriends.vercel.app/api/getAllFriends",
+    `${process.env.NEXTAUTH_URL}/api/getAllFriends`,
     {
       cache: "force-cache",
       next: { tags: [cacheKeys.friends] },
@@ -72,9 +71,9 @@ export async function fetchAllFriends(): Promise<any[]> {
   return response.json();
 }
 
-export async function fetchAllEnemies(): Promise<any[]> {
+export async function fetchAllEnemies(): Promise<Friend[]> {
   const response = await fetch(
-    "https://fourteefriends.vercel.app/api/getAllEnemies",
+    `${process.env.NEXTAUTH_URL}/api/getAllEnemies`,
     {
       cache: "force-cache",
       next: { tags: [cacheKeys.enemies] },
