@@ -20,6 +20,7 @@ export default async function Home() {
         seasonId="nopixel_season_2"
         friends={friends}
         enemies={enemies}
+        isLoading={false}
       />
     </main>
   );

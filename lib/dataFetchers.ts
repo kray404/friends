@@ -21,6 +21,9 @@ const cacheKeys: CacheKeys = {
   enemies: "enemiesData",
 };
 
+// Revalidate time in seconds
+const revalidateTime = 60;
+
 export async function fetchPeopleBySeason({
   seasonId,
   type,
@@ -30,8 +33,8 @@ export async function fetchPeopleBySeason({
   const response = await fetch(
     `${process.env.NEXTAUTH_URL}/api/${seasonId}/${type}`,
     {
-      cache: "force-cache",
-      next: { tags: [cacheKey] },
+      // cache: "force-cache",
+      next: { tags: [cacheKey], revalidate: revalidateTime },
     }
   );
 
@@ -42,10 +45,40 @@ export async function fetchPeopleBySeason({
   return response.json();
 }
 
+export const fetchPeopleBySeasonNew = async ({
+  seasonId,
+  type,
+}: FriendDataProps): Promise<{ data: Friend[]; isLoading: boolean }> => {
+  // Initialize loading state
+  let isLoading = true;
+  try {
+    const cacheKey = type === "friends" ? cacheKeys.friends : cacheKeys.enemies;
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/${seasonId}/${type}`,
+      {
+        // cache: "force-cache",
+        next: { tags: [cacheKey], revalidate: revalidateTime },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${type}`);
+    }
+
+    const data = await response.json();
+    isLoading = false; // Set loading to false after data is fetched
+
+    return { data, isLoading };
+  } catch (error) {
+    isLoading = false;
+    throw error;
+  }
+};
+
 export async function fetchSeasons(): Promise<Season[]> {
   const response = await fetch(`${process.env.NEXTAUTH_URL}/api/seasons`, {
-    cache: "force-cache",
-    next: { tags: [cacheKeys.seasons] },
+    // cache: "force-cache",
+    next: { tags: [cacheKeys.seasons], revalidate: revalidateTime },
   });
 
   if (!response.ok) {
@@ -59,8 +92,8 @@ export async function fetchAllFriends(): Promise<Friend[]> {
   const response = await fetch(
     `${process.env.NEXTAUTH_URL}/api/getAllFriends`,
     {
-      cache: "force-cache",
-      next: { tags: [cacheKeys.friends] },
+      // cache: "force-cache",
+      next: { tags: [cacheKeys.friends], revalidate: revalidateTime },
     }
   );
 
@@ -75,8 +108,8 @@ export async function fetchAllEnemies(): Promise<Friend[]> {
   const response = await fetch(
     `${process.env.NEXTAUTH_URL}/api/getAllEnemies`,
     {
-      cache: "force-cache",
-      next: { tags: [cacheKeys.enemies] },
+      // cache: "force-cache",
+      next: { tags: [cacheKeys.enemies], revalidate: revalidateTime },
     }
   );
 

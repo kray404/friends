@@ -6,22 +6,27 @@ import { sortFriends } from "@/lib/sortFriends";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import FriendTable from "./FriendTable";
 import { Input } from "../ui/input";
+import SkeletonFriendTable from "./SkeletonFriendTable";
 
 interface FriendSectionProps {
   seasonId: string;
   friends: Friend[] | undefined;
   enemies: Friend[] | undefined;
+  isLoading: boolean;
 }
 
 export default function FriendSection({
   seasonId,
   friends,
   enemies,
+  isLoading,
 }: FriendSectionProps) {
   const [viewingFriends, setViewingFriends] = useState(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const displayedPeople = viewingFriends ? friends ?? [] : enemies ?? [];
+
+  console.log(displayedPeople);
 
   const toggleView = () => {
     setViewingFriends(!viewingFriends);
@@ -69,7 +74,12 @@ export default function FriendSection({
           </div>
         </CardHeader>
         <CardContent>
-          <FriendTable friends={filterUsers(sortFriends(displayedPeople))} />
+          {isLoading ? (
+            <SkeletonFriendTable />
+          ) : (
+            <SkeletonFriendTable />
+            // <FriendTable friends={filterUsers(sortFriends(displayedPeople))} />
+          )}
         </CardContent>
       </Card>
     </section>
