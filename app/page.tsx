@@ -3,7 +3,7 @@ import FriendSection from "@/components/FriendSection/FriendSection";
 import { fetchPeopleBySeasonNew } from "@/lib/dataFetchers";
 import { useEffect, useState } from "react";
 
-export default async function Home() {
+export default function Home() {
   const seasonId = "nopixel_season_2";
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [friends, setFriends] = useState<any>([]);
