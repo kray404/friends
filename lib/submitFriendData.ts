@@ -1,4 +1,4 @@
-import Friend from "@/app/interfaces/Friend";
+import Friend from "@/lib/interfaces/Friend";
 
 /**
  * Submits friend data to the server.

@@ -1,7 +1,7 @@
 "use server";
 
-import Friend from "@/app/interfaces/Friend";
-import Season from "@/app/interfaces/Season";
+import Friend from "@/lib/interfaces/Friend";
+import Season from "@/lib/interfaces/Season";
 import { revalidateTag } from "next/cache";
 
 interface CacheKeys {
@@ -56,8 +56,8 @@ export const fetchPeopleBySeasonNew = async ({
     const response = await fetch(
       `${process.env.NEXTAUTH_URL}/api/${seasonId}/${type}`,
       {
-        // cache: "force-cache",
-        next: { tags: [cacheKey], revalidate: revalidateTime },
+        cache: "force-cache",
+        next: { tags: [cacheKey] },
       }
     );
 

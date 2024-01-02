@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import AcceptedUser from "@/app/interfaces/AcceptedUser";
+import AcceptedUser from "@/lib/interfaces/AcceptedUser";
 
 interface DashboardUsersTableProps {
   users: AcceptedUser[];

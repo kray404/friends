@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
 import NavBar from "@/components/NavBar";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Four Tees Friends",
@@ -22,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto_mono.className}>
       <body className="h-full">
-        <Suspense>
-          <NavBar />
-        </Suspense>
+        <NavBar />
         {children}
       </body>
     </html>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import AcceptedUser from "@/app/interfaces/AcceptedUser";
+import AcceptedUser from "@/lib/interfaces/AcceptedUser";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import DashboardUsersTable from "./DashboardUsersTable";
@@ -11,8 +11,8 @@ import { Session } from "next-auth";
 import { isAuthenticated } from "@/lib/isAuthenticated";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
-import Season from "@/app/interfaces/Season";
-import Friend from "@/app/interfaces/Friend";
+import Season from "@/lib/interfaces/Season";
+import Friend from "@/lib/interfaces/Friend";
 import {
   fetchAllEnemies,
   fetchAllFriends,

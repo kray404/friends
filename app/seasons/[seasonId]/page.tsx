@@ -13,6 +13,8 @@ export default function SeasonPage({ params }: { params: MyParams }) {
   const [friends, setFriends] = useState<any>([]);
   const [enemies, setEnemies] = useState<any>([]);
 
+  console.log("Seasons Page");
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);

@@ -1,7 +1,7 @@
 "use client";
 
-import Friend from "@/app/interfaces/Friend";
-import Season from "@/app/interfaces/Season";
+import Friend from "@/lib/interfaces/Friend";
+import Season from "@/lib/interfaces/Season";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import FriendTable from "../FriendSection/FriendTable";
 import { sortFriends } from "@/lib/sortFriends";

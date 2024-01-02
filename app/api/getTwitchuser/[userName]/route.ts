@@ -1,4 +1,4 @@
-import TwitchUser from "@/app/interfaces/TwitchUser";
+import TwitchUser from "@/lib/interfaces/TwitchUser";
 import { NextResponse } from "next/server";
 
 interface MyParams {

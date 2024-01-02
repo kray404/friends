@@ -20,7 +20,7 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import Season from "@/app/interfaces/Season";
+import Season from "@/lib/interfaces/Season";
 import { Button } from "../ui/button";
 
 interface DashboardAddFriendProps {

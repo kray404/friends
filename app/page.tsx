@@ -5,24 +5,27 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const seasonId = "nopixel_season_2";
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [friends, setFriends] = useState<any>([]);
   const [enemies, setEnemies] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // New state for loading
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-      const friends = await fetchPeopleBySeasonNew({
-        seasonId: seasonId,
-        type: "friends",
-      });
-      const enemies = await fetchPeopleBySeasonNew({
-        seasonId: seasonId,
-        type: "enemies",
-      });
-      setIsLoading(false);
-      setFriends(friends.data);
-      setEnemies(enemies.data);
+      setIsLoading(true); // Start loading
+      try {
+        const friendsData = await fetchPeopleBySeasonNew({
+          seasonId: seasonId,
+          type: "friends",
+        });
+        const enemiesData = await fetchPeopleBySeasonNew({
+          seasonId: seasonId,
+          type: "enemies",
+        });
+        setFriends(friendsData.data);
+        setEnemies(enemiesData.data);
+      } finally {
+        setIsLoading(false); // Stop loading after fetching data
+      }
     };
 
     fetchData();

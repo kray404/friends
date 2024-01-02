@@ -1,6 +1,6 @@
 "use client";
 
-import Friend from "@/app/interfaces/Friend";
+import Friend from "@/lib/interfaces/Friend";
 import { useState } from "react";
 import { sortFriends } from "@/lib/sortFriends";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
@@ -21,6 +21,8 @@ export default function FriendSection({
   enemies,
   isLoading,
 }: FriendSectionProps) {
+  console.log(isLoading);
+
   const [viewingFriends, setViewingFriends] = useState(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
 

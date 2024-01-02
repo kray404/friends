@@ -1,4 +1,4 @@
-import Friend from "@/app/interfaces/Friend";
+import Friend from "@/lib/interfaces/Friend";
 import { extractValidUrl } from "@/lib/extractValidUrl";
 import Link from "next/link";
 import {
